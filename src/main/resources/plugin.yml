@@ -1,0 +1,7 @@
+name: MoneyTicket
+version: @version@
+author: testusuke
+main: net.testusuke.moneyticket.MoneyTicket
+commands:
+  mt:
+  moneyticket:
