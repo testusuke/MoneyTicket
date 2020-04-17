@@ -40,12 +40,17 @@ public class MT_command implements CommandExecutor {
                 sendMessage(player,"§aコンフィグを再読み込みしました");
                 return true;
             }
+
+            //  MoneyTicket
             Player player = (Player)sender;
+            if(!player.hasPermission("moneyticket.create")){
+                sendMessage(player,"§cあなたには権限がありません");
+                return false;
+            }
             int money;
             try{
                 money = Integer.parseInt(args[0]);
             }catch (NumberFormatException e){
-                e.printStackTrace();
                 sendMessage(player,"§c無効な操作です");
                 return false;
             }
@@ -71,12 +76,15 @@ public class MT_command implements CommandExecutor {
         }
         if(args.length == 2){
             Player player = (Player)sender;
+            if(!player.hasPermission("moneyticket.create")){
+                sendMessage(player,"§cあなたには権限がありません");
+                return false;
+            }
             int money;
             String memo = args[1];
             try{
                 money = Integer.parseInt(args[0]);
             }catch (NumberFormatException e){
-                e.printStackTrace();
                 sendMessage(player,"§c無効な操作です");
                 return false;
             }
@@ -105,14 +113,14 @@ public class MT_command implements CommandExecutor {
 
 
     private ItemStack createTicket(Player player,int vault){
-        ItemStack item = new ItemStack(Material.NAME_TAG);
+        ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         //  Information
         String name = "§a小切手";
         ArrayList<String> list = new ArrayList<>();
         String price = String.format("%,d", vault);
         list.add(price);
-        list.add("発行者: " + player.getName());
+        list.add("§b発行者: " + player.getName());
         //  偽造防止
         list.add("§6[MT]§a§k§mTRUE");
         //  Set
@@ -125,7 +133,7 @@ public class MT_command implements CommandExecutor {
     }
     //  メモあり
     private ItemStack createTicket(Player player,int vault,String memo){
-        ItemStack item = new ItemStack(Material.NAME_TAG);
+        ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         //  Information
         String name = "§a小切手";
@@ -152,6 +160,7 @@ public class MT_command implements CommandExecutor {
         sendMessageNo(player,"§e/mt <Vault> <Memo> <- メモありの小切手を発行します");
         sendMessageNo(player,"§e/mt reload <- コンフィグを再読み込みします。");
         sendMessageNo(player,"§e小切手を右クリックすることで換金できます。");
+        sendMessageNo(player,"§cIf you want to create MoneyTicket,you need permission'moneyticket.create'");
         sendMessageNo(player,"§d§lCreated by testusuke");
         sendMessageNo(player,"§6============================");
     }

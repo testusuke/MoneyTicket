@@ -1,5 +1,7 @@
 package net.testusuke.moneyticket;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,16 +30,16 @@ public class ClickEvent implements Listener {
             }
             int vault = getVault(item);
             int amount = item.getAmount();
-            if(amount == 1){
-                item.setAmount(0);
-            }else {
-                item.setAmount(amount-1);
-            }
             //  VaultManager
             VaultManager.economy.depositPlayer(player,vault);
             //  Message
             String vault_s = getVaultString(item);
             sendMessage(player,"§a" + vault_s + " 入金しました。");
+            if(amount == 1){
+                item.setAmount(0);
+            }else {
+                item.setAmount(amount-1);
+            }
             plugin.getLogger().info(player.getName() + " receive " + vault_s + " by MoneyTicket");
         }
     }
@@ -52,6 +54,7 @@ public class ClickEvent implements Listener {
         name = meta.getDisplayName();
         list = meta.getLore();
         //  If
+        if(item.getType() != Material.PAPER)return false;
         if(!name.equals("§a小切手"))return false;
         String code = list.get(list.size() -1);
         if(code.equals("§6[MT]§a§k§mTRUE"))return true;
@@ -64,9 +67,8 @@ public class ClickEvent implements Listener {
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
         String vault_s = lore.get(0);
-        vault_s.replace(",","");
         try{
-            vault = Integer.parseInt(vault_s);
+            vault = Integer.parseInt(vault_s.replaceAll("[^0-9]",""));
         }catch (NumberFormatException e){
             e.printStackTrace();
             return 0;
