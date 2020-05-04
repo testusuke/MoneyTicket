@@ -47,14 +47,17 @@ public class ClickEvent implements Listener {
 
     private Boolean checkTicket(ItemStack item){
         boolean b = false;
+        if(item.getType() != Material.PAPER)return false;
+        if(!item.hasItemMeta())return false;
         ItemMeta meta = item.getItemMeta();
+        if(!meta.hasDisplayName())return false;
+        if(!meta.hasLore())return false;
         String name;
         List<String> list;
         //  Getting
         name = meta.getDisplayName();
         list = meta.getLore();
         //  If
-        if(item.getType() != Material.PAPER)return false;
         if(!name.equals("§a小切手"))return false;
         String code = list.get(list.size() -1);
         if(code.equals("§6[MT]§a§k§mTRUE"))return true;
